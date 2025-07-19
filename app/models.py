@@ -37,3 +37,12 @@ class PizzaRestaurant(db.Model,SerializerMixin):
         if not (1 <= price <= 30):
             raise ValueError("Price must be between 1 and 30")
         return price
+    
+    # Validates that the pizza_id and restaurant_id are not the same
+    @validates('pizza_id', 'restaurant_id')
+    def validate_ids(self, key, value):
+        if key == 'pizza_id' and value == self.restaurant_id:
+            raise ValueError("Pizza ID cannot be the same as Restaurant ID")
+        if key == 'restaurant_id' and value == self.pizza_id:
+            raise ValueError("Restaurant ID cannot be the same as Pizza ID")
+        return value
